@@ -1,23 +1,17 @@
-import { useState, useEffect } from 'react'
+import ListaCategorias from './components/ListaCategorias'
+import ListaTransacoes from './components/ListaTransacoes'
+import ResumoMensal from './components/ResumoMensal'
+import NovaTransacao from './components/NovaTransacao'
+import './App.css'
 
 function App() {
-  const [categorias, setCategorias] = useState([])
-
-  useEffect(() => {
-    fetch('http://127.0.0.1:8000/categories/')
-      .then((resposta) => resposta.json())
-      .then((dados) => setCategorias(dados))
-  }, [])
-
   return (
-    <div>
+    <div className="app">
       <h1>Controle Financeiro</h1>
-      <h2>Minhas categorias</h2>
-      <ul>
-        {categorias.map((categoria) => (
-          <li key={categoria.id}>{categoria.nome}</li>
-        ))}
-      </ul>
+      <ListaCategorias />
+      <ListaTransacoes />
+      <ResumoMensal />
+      <NovaTransacao />
     </div>
   )
 }
