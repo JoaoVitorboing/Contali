@@ -1,76 +1,250 @@
+/* VARIÁVEIS COM AS SUAS CORES ORIGINAIS */
+:root {
+  --bg-color: #12161f;
+  --card-bg: #1a1f2b;
+  --input-bg: #232935;
+  --border-color: #2e3542;
+  --accent-color: #4f9d8f;
+  --accent-hover: #63b3a3;
+  --text-primary: #eaeaea;
+  --text-secondary: #8b93a1;
+  --danger-color: #e63946;
+  --danger-hover: #c1121f;
+}
+
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 body {
-  background-color: #1a1a2e;
-  color: #eaeaea;
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-}
-
-.app {
-  max-width: 700px;
-  margin: 0 auto;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
   padding: 32px 16px;
 }
 
-h1 {
+/* ESTRUTURA GERAL */
+.app, .container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.app-layout {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.sidebar {
+  width: 80px;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-top: 20px;
+  flex-shrink: 0;
+}
+
+.conteudo-principal {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+}
+
+.coluna-esquerda,
+.coluna-direita {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+/* TIPOGRAFIA & CARDS */
+h1, h2 {
+  color: var(--accent-color);
   text-align: center;
-  color: #f0a500;
+}
+
+h1 {
+  margin-bottom: 10px;
 }
 
 h2 {
   margin-top: 0;
-  color: #f0a500;
+  margin-bottom: 20px;
 }
 
 .card {
-  background-color: #16213e;
+  background-color: var(--card-bg);
   border-radius: 12px;
   padding: 20px;
-  margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.resumo p {
-  font-size: 1.1rem;
-  margin: 8px 0;
+/* RESUMO MENSAL */
+.resumo-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
+.resumo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; 
 }
 
-li {
-  padding: 8px 0;
-  border-bottom: 1px solid #2a2a4a;
+.resumo-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
 }
 
+.resumo-valor {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+/* FORMULÁRIOS */
 form {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
 
-input, select, button {
+input, select {
+  width: 100%;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #2a2a4a;
-  background-color: #0f3460;
-  color: #eaeaea;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   font-size: 1rem;
+  outline: none;
 }
 
+input:focus, select:focus {
+  border-color: var(--accent-color);
+}
+
+.input-com-prefixo {
+  position: relative;
+}
+
+.prefixo-moeda {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.input-com-prefixo input {
+  padding-left: 32px;
+}
+
+/* BOTÕES */
 button {
-  background-color: #f0a500;
-  color: #1a1a2e;
-  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 6px;
   border: none;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-button:hover {
-  background-color: #ffb700;
+.btn-primary {
+  background-color: var(--accent-color);
+  color: #1a1a2e;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  width: auto;
+}
+
+/* LISTA DE TRANSAÇÕES E CATEGORIAS */
+.transaction-list, .category-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-color);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  gap: 12px;
+}
+
+.transaction-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.transaction-title {
+  font-weight: bold;
+  font-size: 1.05rem;
+}
+
+.transaction-category {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.transaction-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.transaction-value {
+  color: var(--accent-color);
+  font-weight: bold;
+  white-space: nowrap; /* Impede o R$ de quebrar linha ou encostar no botão */
+}
+
+.transaction-actions {
+  display: flex;
+  gap: 8px;
 }

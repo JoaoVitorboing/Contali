@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-function NovaTransacao() {
+function NovaTransacao({ onTransacaoCriada }) {
     const [descricao, setDescricao] = useState('');
     const [tipo, setTipo] = useState('entrada');
     const [valor, setValor] = useState('');
@@ -8,78 +8,119 @@ function NovaTransacao() {
     const [categoryId, setCategoryId] = useState('')
     const [userId, setUserId] = useState('')
 
+    const [listaCategorias, setListaCategorias] = useState([]);
+    const [listaUsuarios, setListaUsuarios] = useState([]);
 
-function handleSubmit(evento) {
-    evento.preventDefault();
+    useEffect(() => {
+        const buscarCategorias = async () => {
+            try {
+                const resposta = await fetch('http://127.0.0.1:8000/categories/');
+                const dados = await resposta.json();
+                setListaCategorias(dados);
+            } catch (error) {
+                console.error('Erro ao buscar categorias:', error);
+            }
+        };
 
-const novaTransacao = {
-    descricao: descricao,
-    tipo: tipo,
-    valor: parseFloat(valor),
-    data: data,
-    category_id: parseInt(categoryId),
-    user_id: parseInt(userId)
+        const buscarUsuarios = async () => {
+            try {
+                const resposta = await fetch('http://127.0.0.1:8000/users/');
+                const dados = await resposta.json();
+                setListaUsuarios(dados);
+            } catch (error) {
+                console.error('Erro ao buscar usuários:', error);
+            }
+        };
+
+        buscarCategorias();
+        buscarUsuarios();
+    }, []);
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const novaTransacao = {
+            descricao: descricao,
+            tipo: tipo,
+            valor: parseFloat(valor.replace('.', '').replace(',', '.')),
+            data: data,
+            category_id: parseInt(categoryId),
+            user_id: parseInt(userId)
+        }
+
+        fetch('http://127.0.0.1:8000/transactions/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(novaTransacao)
+        })
+        .then((resposta) => resposta.json())
+        .then((dados) => {
+            alert('Transação cadastrada com sucesso!');
+            onTransacaoCriada()
+        })
+    }
+
+    function formatarValor(digitosBrutos) {
+    const apenasNumeros = digitosBrutos.replace(/\D/g, '');
+    const numeroEmCentavos = parseInt(apenasNumeros || '0', 10);
+    const valorDecimal = numeroEmCentavos / 100;
+    return valorDecimal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 }
 
-fetch('http://127.0.0.1:8000/transactions/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(novaTransacao)
-})
-.then((resposta) => resposta.json())
-.then((dados) => {
-    alert('Transação cadastrada com sucesso!');
-    window.location.reload();
-})
-}
+    return (
+        <div className="card">
+            <h2>Nova Transação</h2>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="Descrição"
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                />
 
-return (
-    <div className="card">
-        <h2>Nova Transação</h2>
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="Descrição"
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-            />
+                <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                    <option value="entrada">Entrada</option>
+                    <option value="saida">Saída</option>
+                </select>
 
-            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
-                <option value="entrada">Entrada</option>
-                <option value="saida">Saída</option>
-            </select>
+                <div className="input-com-prefixo">
+                    <span className="prefixo-moeda">R$</span>
+                    <input
+                        type="text"
+                        id="Valor"
+                        value={valor}
+                        onChange={(e) => setValor(formatarValor(e.target.value))}
+                    />
+                </div>
 
-            <input
-                type="number"
-                placeholder="Valor"
-                value={valor}
-                onChange={(e) => setValor(e.target.value)}
-            />
+                <input
+                    type="date"
+                    value={data}
+                    onChange={(e) => setData(e.target.value)}
+                />
 
-            <input
-                type="date"
-                value={data}
-                onChange={(e) => setData(e.target.value)}
-            />
+                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+                    <option value="">Selecione a categoria</option>
+                    {listaCategorias.map((categoria) => (
+                        <option key={categoria.id} value={categoria.id}>
+                            {categoria.nome}
+                        </option>
+                    ))}
+                </select>
 
-            <input
-                type="number"
-                placeholder="ID da Categoria"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-            />
+                <select value={userId} onChange={(e) => setUserId(e.target.value)}>
+                    <option value="">Selecione o usuário</option>
+                    {listaUsuarios.map((usuario) => (
+                        <option key={usuario.id} value={usuario.id}>
+                            {usuario.nome}
+                        </option>
+                    ))}
+                </select>
 
-            <input 
-                type="number"
-                placeholder="ID do Usuário"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-            />
-
-            <button type="submit">Criar Transação</button>
+                <button type="submit">Criar Transação</button>
             </form>
-    </div>
-)
-}   
+        </div>
+    ) 
+}
 
 export default NovaTransacao
