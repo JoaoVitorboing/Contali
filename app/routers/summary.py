@@ -22,7 +22,7 @@ def calcular_totais_do_mes(db: Session, mes: int, ano: int):
     total_saidas = (
         db.query(func.sum(Transaction.valor))
         .filter(
-            Transaction.tipo == "saída",
+            Transaction.tipo == "saida",
             extract("month", Transaction.data) == mes,
             extract("year", Transaction.data) == ano,
         )

@@ -5,6 +5,7 @@ import ResumoMensal from './components/ResumoMensal'
 import NovaTransacao from './components/NovaTransacao'
 import './App.css'
 import { Home, Wallet, PieChart, Settings } from 'lucide-react';
+import GraficoHistorico from './components/GraficoHistorico'
 
 function App() {
   const [atualizador, setAtualizador] = useState(0)
@@ -31,6 +32,7 @@ return (
           <div className="coluna-direita">
             <ListaTransacoes onTransacaoAlterada={notificarMudanca} atualizador={atualizador} />
             <ListaCategorias />
+            <GraficoHistorico atualizador={atualizador} />
           </div>
         </div>
       </div>

@@ -248,3 +248,14 @@ button {
   display: flex;
   gap: 8px;
 }
+
+.valor-transacao {
+  white-space: nowrap;
+}
+
+grafico-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+}

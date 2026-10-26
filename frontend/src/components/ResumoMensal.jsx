@@ -1,13 +1,24 @@
 import { useState, useEffect} from 'react';
+import { buscarDados } from '../services/api'
 
 function ResumoMensal({ atualizador }) {
   const [resumo, setResumo] = useState(null)
 
     useEffect(() => {
-    fetch('http://127.0.0.1:8000/summary/?mes=9&ano=2026')
-      .then((resposta) => resposta.json())
-      .then((dados) => setResumo(dados))
-  }, [atualizador]);
+  async function buscarResumo() {
+    try {
+      const dados = await buscarDados(
+        '/summary/?mes=9&ano=2026'
+      )
+
+      setResumo(dados)
+    } catch (erro) {
+      console.error('Erro ao buscar resumo:', erro)
+    }
+  }
+
+  buscarResumo()
+}, [atualizador])
 
   if (!resumo) {
     return <p>Carregando resumo mensal...</p>
